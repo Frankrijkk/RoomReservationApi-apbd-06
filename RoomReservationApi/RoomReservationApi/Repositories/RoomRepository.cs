@@ -1,8 +1,9 @@
+using System.Data;
 using RoomReservationApi.Models;
 
-namespace RoomReservationApi;
+namespace RoomReservationApi.Repositories;
 
-public class RoomRepository
+public class RoomRepository : IRoomRepository
 {
     private List<Room> _rooms;
 
@@ -14,11 +15,7 @@ public class RoomRepository
     {
         return _rooms;
     }
-
-    public Room? GetById(long id)
-    {
-        return _rooms.Where(r=>r.Id == id).FirstOrDefault();
-    }
+    
 
     public List<Room>? GetByBuildingCode(string buildingCode)
     {
@@ -27,24 +24,61 @@ public class RoomRepository
 
     public void AddRoom(Room room)
     {
+        if (_rooms.Contains(room))
+        {
+            throw new ArgumentException("Room Already exists");
+        }
         _rooms.Add(room);
     }
 
-    public void DeleteRoom(Room room)
+    public void DeleteRoom(long id)
     {
-        if (!_rooms.Contains(room))
-        {
-            throw new ArgumentException($"Room {room.Id} does not exist");
-        }
+        Room room = GetRoomIfExists(id);
         _rooms.Remove(room);
-            
-            
-        
     }
 
-    public bool UpdateRoom(long id, string? name, string? buildingCode, int? floor, bool? hasProjector, bool? isActive)
+    public void UpdateRoomName(long id, string name)
     {
-        
+        Room room = GetRoomIfExists(id);
+        room.Name = name;
     }
-    
+
+    public void UpdateRoomBuildingCode(long id, string buildingCode)
+    {
+        Room room = GetRoomIfExists(id);
+        room.BuildingCode = buildingCode;
+    }
+
+    public void UpdateRoomFloor(long id, int floor)
+    {
+        Room room = GetRoomIfExists(id);
+        room.Floor = floor;
+    }
+
+    public void UpdateRoomCapacity(long id, int capacity)
+    {
+        Room room = GetRoomIfExists(id);
+        room.Capacity = capacity;
+    }
+
+    public void UpdateRoomProjector(long id, bool hasProjector)
+    {
+        Room room =GetRoomIfExists(id);
+        room.HasProjector = hasProjector;
+    }
+
+    public void UpdateRoomActive(long id, bool isActive)
+    {
+        Room room = GetRoomIfExists(id);
+        room.IsActive = isActive;
+    }
+
+    public Room GetRoomIfExists(long id)
+    {
+        if (!_rooms.Select((room) => room.Id).Contains(id))
+        {
+            throw new ArgumentException($"Room {id} does not exist");
+        }
+        return _rooms.Where(r=>r.Id == id).Single();
+    }
 }
