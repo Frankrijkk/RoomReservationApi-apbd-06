@@ -25,17 +25,21 @@ public class RoomRepository
         return _rooms.Where(r=>r.BuildingCode == buildingCode).ToList();
     }
 
-    public bool AddRoom(Room room)
+    public void AddRoom(Room room)
     {
         _rooms.Add(room);
-        return true;
     }
 
-    public bool DeleteRoom(Room room)
+    public void DeleteRoom(Room room)
     {
-        if(_rooms.Remove(room))
-            return true;
-        return false;
+        if (!_rooms.Contains(room))
+        {
+            throw new ArgumentException($"Room {room.Id} does not exist");
+        }
+        _rooms.Remove(room);
+            
+            
+        
     }
 
     public bool UpdateRoom(long id, string? name, string? buildingCode, int? floor, bool? hasProjector, bool? isActive)
