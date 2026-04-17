@@ -1,9 +1,15 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace RoomReservationApi.Models;
 
 public class Reservation
 {
     public Reservation(long roomId, string organizerName, string topic, DateOnly date, TimeOnly startTime, TimeOnly endTime, ReservationStatus status)
     {
+        if (StartTime > EndTime)
+        {
+            throw new ValidationException("End Time must be larger than start time");
+        }
         Id = _currentId++;
         RoomId = roomId;
         OrganizerName = organizerName;
@@ -12,6 +18,7 @@ public class Reservation
         StartTime = startTime;
         EndTime = endTime;
         Status = status;
+        
     }
 
     private static long _currentId = 0;

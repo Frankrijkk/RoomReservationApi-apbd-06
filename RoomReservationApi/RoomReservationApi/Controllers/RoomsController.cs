@@ -13,10 +13,10 @@ public class RoomsController : ControllerBase
 {
     public class CreateRoomRequest
     {
-        public string Name { get; set; }
-        public string BuildingCode { get; set; }
+        [Required]public string Name { get; set; }
+        [Required]public string BuildingCode { get; set; }
         public int Floor { get; set; }
-        public int Capacity { get; set; }
+        [Range(0,int.MaxValue)]public int Capacity { get; set; }
         public bool HasProjector { get;  set; }
         public bool IsActive { get; set; }
     }
@@ -26,7 +26,7 @@ public class RoomsController : ControllerBase
         public string? Name { get; set; }
         public string? BuildingCode { get; set; }
         public int? Floor { get; set; }
-        public int? Capacity { get; set; }
+        [Range(0,int.MaxValue)]public int? Capacity { get; set; }
         public bool? HasProjector { get;  set; }
         public bool? IsActive { get; set; }
     }
@@ -79,8 +79,13 @@ public class RoomsController : ControllerBase
     {
         try
         {
-            long newId =  _roomService.Create(rq.Name, rq.BuildingCode, rq.Floor, rq.Capacity, rq.HasProjector, rq.IsActive);
-            return Created($"/api/rooms/{newId}",_roomService.GetAll(null,null,null));
+            long newId = _roomService.Create(rq.Name, rq.BuildingCode, rq.Floor, rq.Capacity, rq.HasProjector,
+                rq.IsActive);
+            return Created($"/api/rooms/{newId}", _roomService.GetAll(null, null, null));
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
         }
         catch (ReservationConflictException e)
         {
@@ -103,6 +108,14 @@ public class RoomsController : ControllerBase
         catch (ArgumentException e)
         {
             return NotFound(e.Message);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500,e.Message);
         }
     }
 

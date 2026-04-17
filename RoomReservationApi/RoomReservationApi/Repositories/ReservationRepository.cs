@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using RoomReservationApi.Models;
 
 namespace RoomReservationApi.Repositories;
@@ -51,6 +52,10 @@ public class ReservationRepository : IReservationRepository
     public void UpdateEndTime(long id, TimeOnly endTime)
     {
         Reservation reservation = GetIfExists(id);
+        if (endTime < reservation.StartTime)
+        {
+            throw new ValidationException("EndTime must be greater than start time");
+        }
         reservation.EndTime = endTime;
     }
 
@@ -75,6 +80,10 @@ public class ReservationRepository : IReservationRepository
     public void UpdateStartTime(long id, TimeOnly startTime)
     {
         Reservation reservation = GetIfExists(id);
+        if (reservation.EndTime > startTime)
+        {
+            throw new ValidationException("EndTime must be greater than start time");
+        }
         reservation.StartTime=startTime;
     }
 }
