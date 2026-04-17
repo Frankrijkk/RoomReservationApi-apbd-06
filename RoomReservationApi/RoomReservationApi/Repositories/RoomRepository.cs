@@ -26,7 +26,7 @@ public class RoomRepository : IRoomRepository
     {
         if (_rooms.Contains(room))
         {
-            throw new ArgumentException("Room Already exists");
+            throw new Exception("Room Already exists");
         }
         _rooms.Add(room);
     }
