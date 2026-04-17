@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
+using RoomReservationApi.Exceptions;
 using RoomReservationApi.Models;
 using RoomReservationApi.Services;
 
@@ -81,7 +82,7 @@ public class RoomsController : ControllerBase
             long newId =  _roomService.Create(rq.Name, rq.BuildingCode, rq.Floor, rq.Capacity, rq.HasProjector, rq.IsActive);
             return Created($"/api/rooms/{newId}",_roomService.GetAll(null,null,null));
         }
-        catch (ArgumentException e)
+        catch (ReservationConflictException e)
         {
             return StatusCode(409, e.Message);
         }

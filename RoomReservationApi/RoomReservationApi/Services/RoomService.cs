@@ -1,3 +1,4 @@
+using RoomReservationApi.Exceptions;
 using RoomReservationApi.Models;
 using RoomReservationApi.Repositories;
 
@@ -7,10 +8,12 @@ public class RoomService : IRoomService
 {
     
     private IRoomRepository _roomRepository;
+    private IReservationRepository _reservationRepository;
 
-    public RoomService(IRoomRepository roomrepository)
+    public RoomService(IRoomRepository roomrepository,IReservationRepository reservationRepository)
     {
         _roomRepository = roomrepository;
+        _reservationRepository = reservationRepository;
     }
     public List<Room> GetAll(int? minCapacity,bool? hasProjector,bool? isActive)
     {
@@ -47,6 +50,11 @@ public class RoomService : IRoomService
 
     public void DeleteRoom(long id)
     {
+        List<Reservation> reservations = _reservationRepository.GetAll().Where(r=>r.RoomId == id).Where(r=>r.Date>DateOnly.FromDateTime(DateTime.Now)).ToList();
+        if (reservations.Count != 0)
+        {
+            throw new ReservationConflictException("There are Reservations for this room");
+        }
         _roomRepository.DeleteRoom(id);
     }
 

@@ -6,11 +6,13 @@ namespace RoomReservationApi.Services;
 
 public class ReservationService : IReservationService
 {
-    public ReservationService(IReservationRepository repository)
+    public ReservationService(IReservationRepository repository,IRoomRepository roomRepository)
     {
         _reservationRepository = repository;
+        _roomRepository = roomRepository;
     }
     IReservationRepository _reservationRepository;
+    private IRoomRepository _roomRepository;
     public Reservation Get(long reservationId)
     {
         return _reservationRepository.GetIfExists(reservationId);
@@ -39,6 +41,13 @@ public class ReservationService : IReservationService
     public long AddReservation(long roomId, string organizerName, string topic, DateOnly date, TimeOnly startTime,
         TimeOnly endTime, ReservationStatus status)
     {
+        Room room = _roomRepository.GetRoomIfExists(roomId);
+        if (!room.IsActive)
+        {
+            throw new ArgumentException("Room is inactive");
+
+        }
+        
         List<Reservation> overlaps =
             _reservationRepository.GetAll().Where(r => r.RoomId == roomId && r.Date == date).ToList().Where(r=>r.StartTime<endTime&&startTime<r.EndTime).ToList();
         if (overlaps.Count > 0)
