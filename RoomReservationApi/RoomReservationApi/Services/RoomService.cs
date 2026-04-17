@@ -38,10 +38,11 @@ public class RoomService : IRoomService
         return _roomRepository.GetRoomIfExists(id);
     }
 
-    public void Create(string name, string buildingCode, int floor, int capacity, bool hadProjector, bool isActive)
+    public long Create(string name, string buildingCode, int floor, int capacity, bool hadProjector, bool isActive)
     {
         Room room = new Room(name,buildingCode,floor,capacity,hadProjector,isActive);
         _roomRepository.AddRoom(room);
+        return room.Id;
     }
 
     public void DeleteRoom(long id)
