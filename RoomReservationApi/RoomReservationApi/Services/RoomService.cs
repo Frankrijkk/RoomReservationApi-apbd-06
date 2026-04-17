@@ -7,9 +7,29 @@ public class RoomService : IRoomService
 {
     
     private IRoomRepository _roomRepository;
-    public List<Room> GetAll()
+
+    public RoomService(IRoomRepository roomrepository)
+    {
+        _roomRepository = roomrepository;
+    }
+    public List<Room> GetAll(int? minCapacity,bool? hasProjector,bool? isActive)
     {
         List<Room> rooms= _roomRepository.GetAllRooms();
+        if (minCapacity!=null)
+        {
+            rooms = rooms.Where(room=>room.Capacity>=minCapacity.Value).ToList();
+        }
+
+        if (hasProjector != null)
+        {
+            rooms = rooms.Where(room => room.HasProjector == hasProjector).ToList();
+        }
+
+        if (isActive != null)
+        {
+            rooms = rooms.Where(room => room.IsActive == isActive).ToList();
+
+        }
         return rooms;
     }
 
