@@ -86,7 +86,7 @@ public class ReservationsController : ControllerBase
     {
         try
         {
-            _reservationService.UpdateReservation(reservationId, rq.OrganizerName, rq.Topic, rq.Date, rq.StartTime,
+            _reservationService.UpdateReservation(reservationId, rq.RoomId,rq.OrganizerName, rq.Topic, rq.Date, rq.StartTime,
                 rq.EndTime, rq.Status);
             return Ok(_reservationService.GetAll(null, null, null));
         }
