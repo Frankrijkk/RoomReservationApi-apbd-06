@@ -1,6 +1,6 @@
 namespace RoomReservationApi.Exceptions;
 
-public class ReservationConflictException
+public class ReservationConflictException : Exception
 {
     
 }
