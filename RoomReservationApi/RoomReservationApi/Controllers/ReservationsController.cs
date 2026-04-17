@@ -64,7 +64,7 @@ public class ReservationsController : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500,e.Message)
+            return StatusCode(500, e.Message);
         }
     }
 
