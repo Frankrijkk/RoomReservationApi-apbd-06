@@ -13,7 +13,7 @@ public class Room
         IsActive = isActive;
     }
 
-    private static long _currentId = 1;
+    private static long _currentId = 0;
     public long Id { get; private set; }
     public string Name { get; set; }
     public string BuildingCode { get; set; }
