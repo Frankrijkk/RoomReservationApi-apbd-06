@@ -12,6 +12,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRoomService,RoomService>();
 builder.Services.AddSingleton<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IReservationService,ReservationService>();
+builder.Services.AddSingleton<IReservationRepository, ReservationRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
