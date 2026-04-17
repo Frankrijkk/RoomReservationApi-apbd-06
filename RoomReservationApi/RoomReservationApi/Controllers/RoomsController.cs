@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using RoomReservationApi.Models;
 using RoomReservationApi.Services;
 
 namespace RoomReservationApi.Controllers;
@@ -7,12 +8,36 @@ namespace RoomReservationApi.Controllers;
 [Route("/api/rooms")]
 public class RoomsController : ControllerBase
 {
-    
-    private IRoomService _roomService;
-    [HttpGet]
-    public IActionResult Get()
+    public class CreateRoomRequest
     {
-        return Ok(_roomService.GetAll());
+        public string Name { get; set; }
+        public string BuildingCode { get; set; }
+        public int Floor { get; set; }
+        public int Capacity { get; set; }
+        public bool HasProjector { get;  set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class UpdateRoomRequest
+    {
+        public string? Name { get; set; }
+        public string? BuildingCode { get; set; }
+        public int? Floor { get; set; }
+        public int? Capacity { get; set; }
+        public bool? HasProjector { get;  set; }
+        public bool? IsActive { get; set; }
+    }
+    private IRoomService _roomService;
+
+    public RoomsController(IRoomService roomService)
+    {
+        _roomService = roomService;
+    }
+    [HttpGet]
+    public IActionResult Get([FromQueryAttribute] int? minCapacity,[FromQueryAttribute] bool? hasProjector,[FromQueryAttribute] bool? isActive)
+    {
+        
+        return Ok(_roomService.GetAll(minCapacity, hasProjector, isActive));
     }
 
     [HttpGet("{id:long}")]
@@ -45,7 +70,56 @@ public class RoomsController : ControllerBase
             return NotFound(e.Message);
         }
     }
-    public 
+
+    [HttpPost]
+    public IActionResult AddRoom([FromBody] CreateRoomRequest rq)
+    {
+        try
+        {
+            _roomService.Create(rq.Name, rq.BuildingCode, rq.Floor, rq.Capacity, rq.HasProjector, rq.IsActive);
+            return Ok(Get(null, null, null));
+        }
+        catch (ArgumentException e)
+        {
+            return StatusCode(409, e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpPut("{id:long}")]
+    public IActionResult Update( long id,[FromBody]UpdateRoomRequest rq)
+    {
+        try
+        {
+            _roomService.Update(id, rq.Name, rq.BuildingCode, rq.Floor, rq.Capacity, rq.HasProjector, rq.IsActive);
+            return Ok(_roomService.GetById(id));
+        }
+        catch (ArgumentException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
+    [HttpDelete("{id:long}")]
+    public IActionResult Delete(long id)
+    {
+        try
+        {
+            _roomService.DeleteRoom(id);
+            return Ok(Get(null, null, null));
+        }
+        catch (ArgumentException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
     
     
 }
