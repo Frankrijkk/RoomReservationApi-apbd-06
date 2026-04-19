@@ -9,7 +9,14 @@ public class RoomRepository : IRoomRepository
 
     public RoomRepository()
     {
-        _rooms = new  List<Room>();
+        _rooms = new  List<Room>()
+        {
+            new Room("room1","AC12",3,20,true,true),
+            new Room("room2","BD67",1,100,false,true),
+            new Room("room3","AC12",2,2,true,false),
+            new Room("room4","BD98",12,5,true,true),
+            new Room("room5","BD67",2,10,false,false)
+        };
     }
     public List<Room> GetAllRooms()
     {

@@ -5,7 +5,19 @@ namespace RoomReservationApi.Repositories;
 
 public class ReservationRepository : IReservationRepository
 {
-    List<Reservation> _reservations = new List<Reservation>();
+    public ReservationRepository()
+    {
+        _reservations = new List<Reservation>()
+        {
+            new Reservation(1,"CDPROJEKTRED","meeting",new DateOnly(2026,6,12),new TimeOnly(6,0),new TimeOnly(18,0),ReservationStatus.Confirmed),
+            new Reservation(2,"AlfaMales","meeting2",new DateOnly(2026,6,15),new TimeOnly(10,0),new TimeOnly(12,0),ReservationStatus.Planned),
+            new Reservation(3,"Bethesda","meeting3",new DateOnly(2026,6,10),new TimeOnly(9,0),new TimeOnly(16,0),ReservationStatus.Cancelled),
+            new Reservation(4,"Studio1","meeting4",new DateOnly(2026,6,17),new TimeOnly(8,0),new TimeOnly(14,30),ReservationStatus.Planned),
+            new Reservation(2,"CDPROJEKTRED","meeting5",new DateOnly(2026,6,15),new TimeOnly(6,0),new TimeOnly(6,15),ReservationStatus.Confirmed),
+            new Reservation(5,"CDPROJEKTRED","meeting6",new DateOnly(2026,6,17),new TimeOnly(16,0),new TimeOnly(22,0),ReservationStatus.Confirmed),
+        };
+    }
+    List<Reservation> _reservations;
 
     public List<Reservation> GetAll()
     {
