@@ -13,24 +13,24 @@ public class ReservationsController : ControllerBase
 {
     public class AddReservationRequest
     { 
-        public long RoomId { get; private set; }
-        [Required] public string OrganizerName {get; private set;}
-        [Required]public string Topic { get; private set; }
-        public DateOnly Date { get; private set; }
-        public TimeOnly StartTime { get; private set; }
-        public TimeOnly EndTime { get; private set; }
-        public ReservationStatus Status { get; private set; }
+        public long RoomId { get; set; }
+        [Required] public string OrganizerName {get; set;}
+        [Required]public string Topic { get; set; }
+        public DateOnly Date { get; set; }
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly EndTime { get; set; }
+        public ReservationStatus Status { get; set; }
     }
 
     public class UpdateReservationRequest
     {
-        public long? RoomId { get; private set; }
-        public string? OrganizerName {get; private set;}
-        public string? Topic { get; private set; }
-        public DateOnly? Date { get; private set; }
-        public TimeOnly? StartTime { get; private set; }
-        public TimeOnly? EndTime { get; private set; }
-        public ReservationStatus? Status { get; private set; }
+        public long? RoomId { get; set; }
+        public string? OrganizerName {get; set;}
+        public string? Topic { get; set; }
+        public DateOnly? Date { get; set; }
+        public TimeOnly? StartTime { get; set; }
+        public TimeOnly? EndTime { get; set; }
+        public ReservationStatus? Status { get; set; }
     }
     public ReservationsController(IReservationService reservationService)
     {
