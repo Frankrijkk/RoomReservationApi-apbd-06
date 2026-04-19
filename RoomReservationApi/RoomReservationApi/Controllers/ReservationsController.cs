@@ -8,7 +8,7 @@ using RoomReservationApi.Services;
 namespace RoomReservationApi.Controllers;
 
 [ApiController]
-[Route("/api/reservations")]
+[Route("/api/[controller]")]
 public class ReservationsController : ControllerBase
 {
     public class AddReservationRequest
